@@ -70,23 +70,75 @@ nginx
 
 server {
 
-listen 80;
+    listen 80;
 
-server_name your-domain.com;
-
-  
-
-root /var/www/html/your-project;
-
-index index.html index.htm;
+    server_name angeles.comclark.com;
 
   
 
-location / {
+    root /var/www/angeles;
 
-try_files $uri $uri/ =404;
+    index index.html;
+
+  
+
+    return 301 https://$host$request_uri;
+
+  
+
+    location / {
+
+        try_files $uri /index.html;
+
+    }
+
+  
 
 }
+
+  
+
+server {
+
+    listen 443 ssl;
+
+    server_name angeles.comclark.com;
+
+  
+
+    root /var/www/angeles;
+
+    index index.html;
+
+  
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    ssl_prefer_server_ciphers on;
+
+    ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+
+  
+
+    ssl_certificate /etc/nginx/ssl/fullchain.crt;
+
+    ssl_certificate_key /etc/nginx/ssl/comclark.key;
+
+    ##Mod Security
+
+    modsecurity on;
+
+    modsecurity_rules_file /etc/nginx/modsec/main.conf;
+
+  
+
+    location / {
+
+        try_files $uri /index.html;
+
+    }
+
+  
 
 }
 
